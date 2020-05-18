@@ -1,9 +1,10 @@
-version: '3'
+version: '3.8'
 services:
   miniflux:
     image: miniflux/miniflux:2.0.21
-    ports:
-      - "80:8080"
+    networks:
+      - nginx
+      - miniflux
     depends_on:
       - db
     environment:
@@ -14,12 +15,25 @@ services:
       - ADMIN_USERNAME=miniflux
       - ADMIN_PASSWORD=miniflux@2020
     restart: unless-stopped
+    volumes:
+      - nginx:/etc/nginx.h
+      - ./data/miniflux.conf:/etc/nginx.h/miniflux.conf
   db:
     image: postgres:10.1
+    networks:
+      - miniflux
     environment:
       - POSTGRES_USER=miniflux
       - POSTGRES_PASSWORD=secret
     volumes:
       - miniflux-db:/var/lib/postgresql/data
+networks:
+  nginx:
+    external:
+      name: v2ray-hooked
+  miniflux:
 volumes:
   miniflux-db:
+  nginx:
+    external:
+      name: v2ray-hooked
