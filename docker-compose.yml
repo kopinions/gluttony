@@ -17,7 +17,16 @@ services:
     restart: unless-stopped
     volumes:
       - nginx:/etc/nginx.h
-      - ./data/miniflux.conf:/etc/nginx.h/miniflux.conf
+      - type: volume
+        source: nginx
+        target: /etc/conf.h
+        bind:
+          propagation: shared
+      - type: bind
+        source: ./data/miniflux.conf
+        target: /etc/nginx.h/miniflux.conf
+        bind:
+          propagation: shared
   db:
     image: postgres:10.1
     networks:
