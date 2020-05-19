@@ -7,13 +7,13 @@ services:
       - miniflux
     depends_on:
       - db
+    env_file:
+      - miniflux.credentials
     environment:
       - DATABASE_URL=postgres://miniflux:secret@db/miniflux?sslmode=disable
       - RUN_MIGRATIONS=1
       - POLLING_FREQUENCY=60
       - CREATE_ADMIN=1
-      - ADMIN_USERNAME=miniflux
-      - ADMIN_PASSWORD=miniflux@2020
     restart: unless-stopped
     volumes:
       - nginx:/etc/nginx.h
