@@ -22,13 +22,8 @@ services:
         bind:
           propagation: shared
       - type: bind
-        source: ./data/miniflux.conf
-        target: /etc/nginx/conf.h/miniflux.conf
-        bind:
-          propagation: shared
-      - type: bind
-        source: ./data/rsshub.conf
-        target: /etc/nginx/conf.h/rsshub.conf
+        source: ./data
+        target: /etc/nginx/conf.h
         bind:
           propagation: shared
   db:
