@@ -44,7 +44,7 @@ services:
     image: diygod/rsshub
     networks:
       - nginx
-      - miniflux
+      - rsshub
     restart: always
     environment:
       NODE_ENV: production
@@ -57,12 +57,12 @@ services:
   browserless:
     image: browserless/chrome
     networks:
-      - miniflux
+      - rsshub
     restart: always
   redis:
     image: redis:alpine
     networks:
-      - miniflux
+      - rsshub
     restart: always
     volumes:
       - redis:/data
@@ -71,6 +71,7 @@ networks:
     external:
       name: v2ray-hooked
   miniflux:
+  rsshub:
 volumes:
   miniflux-db:
   redis:
