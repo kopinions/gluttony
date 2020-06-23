@@ -16,15 +16,19 @@ services:
       - CREATE_ADMIN=1
     restart: unless-stopped
     volumes:
-      - nginx:/etc/nginx.h
       - type: volume
         source: nginx
-        target: /etc/conf.h
+        target: /etc/nginx/conf.h
         bind:
           propagation: shared
       - type: bind
         source: ./data/miniflux.conf
-        target: /etc/nginx.h/miniflux.conf
+        target: /etc/nginx/conf.h/miniflux.conf
+        bind:
+          propagation: shared
+      - type: bind
+        source: ./data/rsshub.conf
+        target: /etc/nginx/conf.h/rsshub.conf
         bind:
           propagation: shared
   db:
@@ -36,6 +40,32 @@ services:
       - POSTGRES_PASSWORD=secret
     volumes:
       - miniflux-db:/var/lib/postgresql/data
+  rsshub:
+    image: diygod/rsshub
+    networks:
+      - nginx
+      - miniflux
+    restart: always
+    environment:
+      NODE_ENV: production
+      CACHE_TYPE: redis
+      REDIS_URL: 'redis://redis:6379/'
+      PUPPETEER_WS_ENDPOINT: 'ws://browserless:3000'
+    depends_on:
+    - redis
+    - browserless
+  browserless:
+    image: browserless/chrome
+    networks:
+      - miniflux
+    restart: always
+  redis:
+    image: redis:alpine
+    networks:
+      - miniflux
+    restart: always
+    volumes:
+      - redis:/data
 networks:
   nginx:
     external:
@@ -43,6 +73,7 @@ networks:
   miniflux:
 volumes:
   miniflux-db:
+  redis:
   nginx:
     external:
       name: v2ray-hooked
