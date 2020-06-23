@@ -18,14 +18,14 @@ services:
     volumes:
       - type: volume
         source: nginx
-        target: /etc/nginx/conf.h
+        target: /miniflux
         bind:
           propagation: shared
       - type: bind
-        source: ./data
-        target: /etc/nginx/conf.h
+        source: ./data/miniflux
+        target: /miniflux/miniflux
         bind:
-          propagation: shared
+          propagatin: rshared
   db:
     image: postgres:10.1
     networks:
@@ -41,6 +41,15 @@ services:
       - nginx
       - rsshub
     restart: always
+    volumes:
+      - type: volume
+        source: nginx
+        target: /rsshub
+      - type: bind
+        source: ./data/rsshub
+        target: /rsshub/rsshub
+        bind:
+          propagatin: rshared
     environment:
       NODE_ENV: production
       CACHE_TYPE: redis
