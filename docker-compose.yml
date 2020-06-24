@@ -3,7 +3,7 @@ services:
   miniflux:
     image: miniflux/miniflux:2.0.21
     networks:
-      - nginx
+      - routing
       - miniflux
     depends_on:
       - db
@@ -17,13 +17,13 @@ services:
     restart: unless-stopped
     volumes:
       - type: volume
-        source: nginx
+        source: routing
         target: /miniflux
         bind:
-          propagation: shared
+          propagation: rshared
       - type: bind
-        source: ./data/miniflux
-        target: /miniflux/miniflux
+        source: ./data/miniflux/nginx.conf
+        target: /miniflux/miniflux/nginx.conf
         bind:
           propagatin: rshared
   db:
@@ -38,16 +38,18 @@ services:
   rsshub:
     image: diygod/rsshub
     networks:
-      - nginx
+      - routing
       - rsshub
     restart: always
     volumes:
       - type: volume
-        source: nginx
+        source: routing
         target: /rsshub
+        bind:
+          propagation: rshared
       - type: bind
-        source: ./data/rsshub
-        target: /rsshub/rsshub
+        source: ./data/rsshub/nginx.conf
+        target: /rsshub/rsshub/nginx.conf
         bind:
           propagatin: rshared
     environment:
@@ -71,14 +73,14 @@ services:
     volumes:
       - redis:/data
 networks:
-  nginx:
+  routing:
     external:
-      name: v2ray-hooked
+      name: routing-hooked
   miniflux:
   rsshub:
 volumes:
   miniflux-db:
   redis:
-  nginx:
+  routing:
     external:
-      name: v2ray-hooked
+      name: routing-hooked
