@@ -1,5 +1,15 @@
 version: '3.8'
 services:
+  files:
+    build: images
+    image: files
+    restart: no
+    volumes:
+      - type: bind
+        source: routing
+        target: /data
+        bind:
+          propagatin: rshared
   miniflux:
     image: miniflux/miniflux:2.0.21
     networks:
@@ -15,12 +25,6 @@ services:
       - POLLING_FREQUENCY=60
       - CREATE_ADMIN=1
     restart: unless-stopped
-    volumes:
-      - type: volume
-        source: routing
-        target: ./data/
-        bind:
-          propagation: rshared
   db:
     image: postgres:10.1
     networks:
