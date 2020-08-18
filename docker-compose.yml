@@ -3,11 +3,11 @@ services:
   files:
     build: images
     image: files
-    restart: no
+    restart: "no"
     volumes:
-      - type: bind
+      - type: volume
         source: routing
-        target: /data
+        target: /hook
         bind:
           propagatin: rshared
   miniflux:
