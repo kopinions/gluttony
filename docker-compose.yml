@@ -4,6 +4,7 @@ services:
     build: images
     image: files
     restart: "no"
+    extrypoint: "/bin/sh -c 'cp -rf /data/* /hook'"
     volumes:
       - type: volume
         source: routing
